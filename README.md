@@ -14,3 +14,16 @@ Building a hella RAG system
  ```bash
  $ conda activate mini-rag
  ```
+
+ ## Installation
+ ### Install the required packages
+ ```bash
+ $ pip install -r requirements.txt
+ ```
+
+ ### Setup the environment variables
+ ```bash
+ $ cp .env.example .env
+ ```
+
+ Then you will need to set your environment variables in `.env` file.
