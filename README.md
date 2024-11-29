@@ -27,3 +27,13 @@ Building a hella RAG system
  ```
 
  Then you will need to set your environment variables in `.env` file.
+
+ ## Run the server
+
+ ```bash
+$ uvicorn main:app --reload --host 0.0.0.0 --port 5000
+ ```
+
+ ## Postman collection
+
+ Download the POSTMAN collection from [/assets/mini-rag-app.postman_collection.json](/assets/mini-rag-app.postman_collection.json)
