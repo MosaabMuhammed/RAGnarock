@@ -1,7 +1,9 @@
 from fastapi import APIRouter, UploadFile, Depends, status
 from fastapi.responses import JSONResponse
 from config.settings import get_settings, Settings
-from controllers import DataController
+from controllers import DataController, ProjectController
+from models import ResponseSignals
+import aiofiles
 
 data_router = APIRouter(
     prefix="/api/v1",
@@ -10,11 +12,25 @@ data_router = APIRouter(
 
 @data_router.post("/upload_file/{project_id}")
 async def upload_file(project_id: str, file: UploadFile, app_settings: Settings=Depends(get_settings)):
-    is_valid, signal_res = DataController().validate_uploaded_file(file=file)
+    data_controller = DataController()
+
+    is_valid, signal_res = data_controller.validate_uploaded_file(file=file)
 
     if not is_valid:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, 
                             content={"signal": signal_res})
     
-    return JSONResponse(status_code=status.HTTP_200_OK, 
-                        content={"signal": signal_res})
+
+    file_path = data_controller.generate_unique_filepath(orig_file_name=file.filename,
+                                                         project_id=project_id)
+
+    try:
+        async with aiofiles.open(file_path, "wb") as f:
+            while chunk := await file.read(app_settings.FILE_CHUNK_SIZE_BYTES):
+                await f.write(chunk)
+    except Exception as e:
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+                            content={"signal": ResponseSignals.FILE_UPLOAD_FAILED})
+
+    return JSONResponse(status_code=status.HTTP_201_CREATED, 
+                        content={"signal": ResponseSignals.FILE_UPLOAD_SUCCESS})
