@@ -21,11 +21,12 @@ class DataController(BaseController):
     def generate_unique_filepath(self, orig_file_name: str, project_id: str):
         project_path     = ProjectController().get_project_path(project_id=project_id)
         cleaned_filename = self.get_clean_file_name(orig_file_name=orig_file_name)
-
-        return project_path / f"{uuid.uuid4().hex}_{cleaned_filename}"
+        unique_filename  = f"{uuid.uuid4().hex}_{cleaned_filename}"
+        
+        return project_path / unique_filename, unique_filename
     
     def get_clean_file_name(self, orig_file_name: str):
-        # remove any special characters, except underscore and .
+        # remove any characters that are not alphanumeric, underscore, or period
         cleaned_file_name = re.sub(r'[^\w.]', '', orig_file_name.strip())
 
         # replace spaces with underscore
