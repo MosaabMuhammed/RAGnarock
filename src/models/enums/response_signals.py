@@ -7,5 +7,8 @@ class ResponseSignals(str, Enum):
     FILE_UPLOAD_FAILED      = "file_upload_failed"
     FILE_UPLOAD_SUCCESS     = "file_uploaded_successfully"
 
+    PROCESS_SUCCESS = "file_process_success"
+    PROCESS_FAILED  = "file process_failed"
+
     def __str__(self) -> str:
         return str.__str__(self)
