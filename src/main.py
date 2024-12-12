@@ -11,12 +11,12 @@ from contextlib import asynccontextmanager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings = get_settings()
-    app.client = AsyncIOMotorClient(settings.MONGODB_URL)
-    app.db     = app.client[settings.MONGODB_DB]
+    app.mongo_conn = AsyncIOMotorClient(settings.MONGODB_URL)
+    app.db_client  = app.mongo_conn[settings.APP_NAME]
 
     yield
 
-    app.db.client.close()
+    app.mongo_conn.close()
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(base_router)

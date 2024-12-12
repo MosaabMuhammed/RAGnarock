@@ -31,6 +31,7 @@ Building a hella RAG system
  ## Run the server
 
  ```bash
+$ cd src
 $ uvicorn main:app --reload --host 0.0.0.0 --port 5000
  ```
 
