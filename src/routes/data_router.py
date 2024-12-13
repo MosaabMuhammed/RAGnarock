@@ -5,8 +5,8 @@ from controllers import DataController, ProcessController
 from models import ResponseSignals
 import aiofiles
 from .schemas.data import ProcessData
-from models import ProjectModel, ChunkModel
-from models.db_schemas import Chunk
+from models import ProjectModel, ChunkModel, AssetModel
+from models.db_schemas import Chunk, Asset
 
 data_router = APIRouter(
     prefix="/api/v1",
@@ -40,10 +40,21 @@ async def upload_file(request: Request,
     except Exception as e:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
                             content={"signal": ResponseSignals.FILE_UPLOAD_FAILED})
+    
+    asset_model = await AssetModel.create_instance(db_client=request.app.db_client)
+
+    asset = Asset(
+        project_id=project.id,
+        name=file_id,
+        size=file_path.stat().st_size,
+        type=file.content_type
+    )
+
+    asset_record = await asset_model.insert_one(asset=asset)
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, 
                         content={"signal": ResponseSignals.FILE_UPLOAD_SUCCESS,
-                                 "file_id": file_id})
+                                 "asset_id": str(asset_record.id)})
 
 @data_router.post("/process/{project_id}")
 async def process_endpoint(request: Request, project_id: str, process_data: ProcessData):

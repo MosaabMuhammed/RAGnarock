@@ -1,19 +1,19 @@
 from .db_model import DatabaseModel
 from .enums import DBEnums
-from .db_schemas import Chunk
+from .db_schemas import Asset
 from bson.objectid import ObjectId
 from pymongo import InsertOne
 
-class ChunkModel(DatabaseModel):
+class AssetModel(DatabaseModel):
     def __init__(self, db_client):
         super().__init__(db_client)
-        self.collection = self.db_client[DBEnums.CHUNKS_COLLECTION_NAME]
+        self.collection = self.db_client[DBEnums.ASSET_COLLECTION_NAME]
 
     async def init_collection(self):
         all_collections = await self.db_client.list_collection_names()
-        if DBEnums.CHUNKS_COLLECTION_NAME not in all_collections:
-            self.collection = self.db_client[DBEnums.CHUNKS_COLLECTION_NAME]
-            indices = Chunk.get_indexes()
+        if DBEnums.ASSET_COLLECTION_NAME not in all_collections:
+            self.collection = self.db_client[DBEnums.ASSET_COLLECTION_NAME]
+            indices = Asset.get_indexes()
             for index in indices:
                 await self.collection.create_index(**index)
 
@@ -23,28 +23,28 @@ class ChunkModel(DatabaseModel):
         await instance.init_collection()
         return instance
 
-    async def insert_one(self, chunk: Chunk):
-        result = await self.collection.insert_one(chunk.dict(by_alias=True, exclude_unset=True))
-        chunk.id = result.inserted_id
-        return chunk
+    async def insert_one(self, asset: Asset):
+        result = await self.collection.insert_one(asset.to_dict_with_timestamp())
+        asset.id = result.inserted_id
+        return asset
     
-    async def insert_many(self, chunks: list, batch_size: int=100):
-        for i in range(0, len(chunks), batch_size):
-            batch = chunks[i:i + batch_size]
-            operations = [InsertOne(chunk.dict(by_alias=True, exclude_unset=True)) for chunk in batch]
+    async def insert_many(self, assets: list, batch_size: int=100):
+        for i in range(0, len(assets), batch_size):
+            batch = assets[i:i + batch_size]
+            operations = [InsertOne(asset.to_dict_with_timestamp()) for asset in batch]
         await self.collection.bulk_write(operations)
-        return len(chunks)
+        return len(assets)
     
-    async def get_one(self, chunk_id: str):
-        chunk = await self.collection.find_one({"_id": ObjectId(chunk_id)})
-        if chunk is None:
+    async def get_one(self, asset_id: str):
+        asset = await self.collection.find_one({"_id": ObjectId(asset_id)})
+        if asset is None:
             return None
-        return Chunk(**chunk)
+        return Asset(**asset)
     
     async def get_many(self, project_id: str, page_index: int=1, page_size: int=10):
         records = await self.collection.find({"project_id": project_id}).skip((page_index - 1) * page_size).limit(page_size).tolist(length=None)
 
-        return [Chunk(**record) for record in records]
+        return [Asset(**record) for record in records]
     
     async def delete_many_by_project_id(self, project_id: str):
         result = await self.collection.delete_many({"project_id": project_id})

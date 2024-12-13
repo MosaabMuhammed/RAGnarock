@@ -21,16 +21,15 @@ class ProjectModel(DatabaseModel):
         await instance.init_collection()
         return instance
 
-    async def insert_one(self, project_id: str):
-        project = Project(project_id=project_id)
+    async def insert_one(self, project: Project):
         result = await self.collection.insert_one(project.dict(by_alias=True, exclude_unset=True))
-        project._id = result.inserted_id
+        project.id = result.inserted_id
         return project
     
     async def get_or_create_one(self, project_id: str):
         project = await self.collection.find_one({"project_id": project_id})
         if project is None:
-            project = Project(project_id=project_id)
+            project = Project(project_id=str(project_id))
             return await self.insert_one(project)
         return Project(**project)
     
