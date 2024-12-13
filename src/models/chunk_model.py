@@ -9,6 +9,20 @@ class ChunkModel(DatabaseModel):
         super().__init__(db_client)
         self.collection = self.db_client[DBEnums.CHUNKS_COLLECTION_NAME]
 
+    async def init_collection(self):
+        all_collections = await self.db_client.list_collection_names()
+        if DBEnums.CHUNKS_COLLECTION_NAME not in all_collections:
+            self.collection = self.db_client[DBEnums.CHUNKS_COLLECTION_NAME]
+            indices = Chunk.get_indexes()
+            for index in indices:
+                await self.collection.create_index(**index)
+
+    @classmethod
+    async def create_instance(cls, db_client):
+        instance = cls(db_client)
+        await instance.init_collection()
+        return instance
+
     async def insert_one(self, chunk: Chunk):
         result = await self.collection.insert_one(chunk.dict(by_alias=True, exclude_unset=True))
         chunk._id = result.inserted_id

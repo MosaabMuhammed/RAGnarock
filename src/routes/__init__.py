@@ -1,2 +1,2 @@
-from .base import base_router
-from .data import data_router
+from .base_router import base_router
+from .data_router import data_router

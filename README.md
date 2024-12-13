@@ -32,7 +32,7 @@ Building a hella RAG system
  ```bash
 $ cd docker
 $ cp .env.example .env
-$ sudo docker compose up
+$ sudo docker compose up -d
  ```
 
  ## Run the server
