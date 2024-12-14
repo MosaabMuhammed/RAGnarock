@@ -1,7 +1,7 @@
 from .provider_interface import ProviderInterface
 from openai import OpenAI
 import logging
-from ..llm_enums import OpenAIEnums
+from .llm_enums import OpenAIEnums
 
 class OpenAIProvider(ProviderInterface):
     def __init__(self, 
@@ -30,6 +30,9 @@ class OpenAIProvider(ProviderInterface):
         self.embedding_model_id = model_id
         self.embedding_size = embed_size
 
+    def process_text(self, text: str):
+        return text[:self.max_input_tokens].strip()
+
     def generate_text(self, 
                       prompt: str,
                       chat_history: list=[],
@@ -46,7 +49,7 @@ class OpenAIProvider(ProviderInterface):
         max_tokens = max_tokens or self.max_output_tokens
         temperature = temperature or self.temperature
 
-        chat_history.append(self.construct_prompt(prompt, OpenAIEnums.SYSTEM))
+        chat_history.append(self.construct_prompt(prompt, OpenAIEnums.USER))
 
         response = self.client.completions.create(model=self.generation_model_id,
                                                   messages=chat_history,
@@ -57,9 +60,6 @@ class OpenAIProvider(ProviderInterface):
             self.logger.error("Error while generating text with OpenAI")
             return None
         return response.choices[0].message['content']
-    
-    def process_text(self, text: str):
-        return text[:self.max_input_tokens].strip()
 
         
     def embed_text(self, text: str, doc_type: str=None):
