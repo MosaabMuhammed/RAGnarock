@@ -15,7 +15,10 @@ class ProcessController(BaseController):
 
     def __get_file_loader(self, file_id: Path): 
         file_extension = Path(file_id).suffix
-        file_path = self.project_path / file_id
+        file_path      = self.project_path / file_id
+
+        if not file_path.is_file():
+            return None
 
         if file_extension == FileEnums.TXT:
             return TextLoader(file_path=file_path, encoding="utf-8")
@@ -28,6 +31,7 @@ class ProcessController(BaseController):
     
     def get_file_content(self, file_id: Path):
         loader = self.__get_file_loader(file_id=file_id)
+        if loader is None: return None
         return loader.load()
     
     def process_file_content(self, 
@@ -37,8 +41,7 @@ class ProcessController(BaseController):
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
                                                        chunk_overlap=overlap_size,
                                                        length_function=len)
-        # print(file_content)
-        file_content_texts = [rec.page_content for rec in file_content]
+        file_content_texts    = [rec.page_content for rec in file_content]
         file_content_metadata = [rec.metadata for rec in file_content]
 
         chunks = text_splitter.create_documents(texts=file_content_texts,

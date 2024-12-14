@@ -6,6 +6,7 @@ class ResponseSignals(str, Enum):
     FILE_SIZE_EXCEEDED      = "file_size_exceeded"
     FILE_UPLOAD_FAILED      = "file_upload_failed"
     FILE_UPLOAD_SUCCESS     = "file_uploaded_successfully"
+    FILE_NOT_FOUND          = "file_not_found"
 
     PROCESS_SUCCESS = "file_process_success"
     PROCESS_FAILED  = "file process_failed"

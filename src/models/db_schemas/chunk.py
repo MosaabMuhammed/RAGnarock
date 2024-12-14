@@ -7,6 +7,7 @@ class Chunk(BaseModel):
     text: str               = Field(..., min_length=1)
     order: int              = Field(..., gt=0)
     project_id: ObjectId
+    asset_id: ObjectId
     metadata: dict
 
     class Config:

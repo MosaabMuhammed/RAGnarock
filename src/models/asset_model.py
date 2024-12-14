@@ -41,8 +41,14 @@ class AssetModel(DatabaseModel):
             return None
         return Asset(**asset)
     
-    async def get_many(self, project_id: str, page_index: int=1, page_size: int=10):
-        records = await self.collection.find({"project_id": project_id}).skip((page_index - 1) * page_size).limit(page_size).tolist(length=None)
+    async def get_by_name(self, name: str):
+        asset = await self.collection.find_one({"name": name})
+        if asset is None:
+            return None
+        return Asset(**asset)
+    
+    async def get_many(self, project_id: str, type: str=None):
+        records = await self.collection.find({"project_id": project_id, "type": type}).to_list(length=None)
 
         return [Asset(**record) for record in records]
     
