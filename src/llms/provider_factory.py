@@ -1,4 +1,4 @@
-from providers import OpenAIProvider, CohereProvider, LLMEnums
+from .providers import OpenAIProvider, CohereProvider, LLMEnums
 
 class LLMProviderFactory:
     def __init__(self, config: dict):

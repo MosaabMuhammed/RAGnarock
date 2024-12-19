@@ -1,1 +1,1 @@
-from .provider_factory import ProviderFactory
+from .provider_factory import LLMProviderFactory

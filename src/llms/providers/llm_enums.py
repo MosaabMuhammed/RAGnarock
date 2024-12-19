@@ -5,8 +5,8 @@ class StrEnum(str, Enum):
         return str.__str__(self)
 
 class LLMEnums(StrEnum):
-    OPENAI = "openai"
-    COHERE = "cohere"
+    OPENAI = "OPENAI"
+    COHERE = "COHERE"
 
 class OpenAIEnums(StrEnum):
     SYSTEM    = "system"
@@ -18,8 +18,8 @@ class CohereEnums(StrEnum):
     USER      = "user"
     ASSISTANT = "assistant"
 
-    DOCUMENT = "document_type"
-    QUERY    = "query_type"
+    DOCUMENT = "search_document"
+    QUERY    = "search_query"
 
 class DocumentTypeEnums(StrEnum):
     DOCUMENT = "document"

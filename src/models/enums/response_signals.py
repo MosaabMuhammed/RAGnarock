@@ -11,5 +11,12 @@ class ResponseSignals(str, Enum):
     PROCESS_SUCCESS = "file_process_success"
     PROCESS_FAILED  = "file process_failed"
 
+    PROJECT_NOT_FOUND = "project_not_found"
+    INDEX_INSERTION_FAILED = "index_insertion_failed"
+    INDEX_INSERTION_SUCCESS = "index_insertion_success"
+    INDEX_INFO_FETCHED      = "index_info_fetched"
+    INDEX_SEARCH_SUCCESS    = "index_search_success"
+    INDEX_SEARCH_FAILED     = "index_search_failed"
+
     def __str__(self) -> str:
         return str.__str__(self)

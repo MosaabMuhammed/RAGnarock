@@ -3,8 +3,8 @@ from typing import List, Dict, Any
 
 from qdrant_client import models, QdrantClient
 
-from vectordb_interface import VectorDBInterface
-from vectordb_enums import DistanceMethodEnums
+from .vectordb_interface import VectorDBInterface
+from .vectordb_enums import DistanceMethodEnums
 
 class QdarntDBProvider(VectorDBInterface):
     def __init__(self, db_path: str, distance_method: DistanceMethodEnums):
@@ -12,13 +12,13 @@ class QdarntDBProvider(VectorDBInterface):
         self.db_path = db_path
 
         if distance_method == DistanceMethodEnums.COSINE:
-            self.distance_method = "cosine"
+            self.distance_method = "Cosine"
         elif distance_method == DistanceMethodEnums.DOT:
-            self.distance_method = "dot"
+            self.distance_method = "Dot"
         elif distance_method == DistanceMethodEnums.EUCLIDEAN:
-            self.distance_method = "euclidean"
+            self.distance_method = "Euclid"
 
-        self.logger = logging.get_logger(__name__)
+        self.logger = logging.getLogger(__name__)
 
     def connect(self):
         self.client = QdrantClient(path=self.db_path)
@@ -66,6 +66,7 @@ class QdarntDBProvider(VectorDBInterface):
         try:
             _ = self.client.upload_records(collection_name=collection_name,
                                         records=[models.Record(
+                                            id=[record_id],
                                             vector=vector,
                                             payload={"text": text, "metadata": metadata}
                                         )])
@@ -86,7 +87,7 @@ class QdarntDBProvider(VectorDBInterface):
             metadata = [None] * len(texts)
         
         if record_ids is None:
-            record_ids = [None] * len(texts)
+            record_ids = list(range(0, len(texts)))
 
         for i in range(0, len(texts), batch_size):
             batch_texts      = texts[i:i+batch_size]
@@ -117,4 +118,3 @@ class QdarntDBProvider(VectorDBInterface):
         return self.client.search(collection_name=collection_name,
                                   query_vector=vector,
                                   limit=top_k)
-        

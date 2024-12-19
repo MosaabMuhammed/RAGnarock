@@ -41,8 +41,8 @@ class ChunkModel(DatabaseModel):
             return None
         return Chunk(**chunk)
     
-    async def get_many(self, project_id: str, page_index: int=1, page_size: int=10):
-        records = await self.collection.find({"project_id": project_id}).skip((page_index - 1) * page_size).limit(page_size).tolist(length=None)
+    async def get_many(self, project_id: ObjectId, page_index: int=1, page_size: int=10):
+        records = await self.collection.find({"project_id": project_id}).skip((page_index - 1) * page_size).limit(page_size).to_list(length=None)
 
         return [Chunk(**record) for record in records]
     

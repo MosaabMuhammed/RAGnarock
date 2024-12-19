@@ -20,7 +20,7 @@ class OpenAIProvider(ProviderInterface):
         self.embedding_model_id  = None
         self.embedding_size      = None
 
-        self.client = OpenAI(api_key=api_key, api_url=api_url)
+        self.client = OpenAI(api_key=api_key, base_url=api_url)
         self.logger = logging.getLogger(__name__)
 
     def set_generation_model(self, model_id: str):

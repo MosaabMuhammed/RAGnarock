@@ -1,4 +1,4 @@
-from provider_interface import ProviderInterface
+from .provider_interface import ProviderInterface
 from .llm_enums import CohereEnums, DocumentTypeEnums
 import cohere
 import logging

@@ -1,4 +1,4 @@
-from providers import QdarntDBProvider, VectorDBEnums
+from .providers import QdarntDBProvider, VectorDBEnums
 from controllers.base_controller import BaseController
 
 class VectorDBFactory:

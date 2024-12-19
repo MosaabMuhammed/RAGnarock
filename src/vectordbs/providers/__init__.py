@@ -1,2 +1,2 @@
-from vectordb_enums import VectorDBEnums
-from Qdarntdb_provider import QdarntDBProvider
+from .vectordb_enums import VectorDBEnums
+from vectordbs.providers.Qdrantdb_provider import QdarntDBProvider
