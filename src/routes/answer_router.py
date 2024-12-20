@@ -31,4 +31,6 @@ async def answer_query(request: Request, project_id: str, search_request: Search
      
     return JSONResponse(status_code=status.HTTP_200_OK,
                         content={"signal": ResponseSignals.ANSWER_GENERATED_SUCCESS,
-                                 "response": response})
+                                 "response": response,
+                                 "prompt": prompt,
+                                 "chat_history": chat_history})

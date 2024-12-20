@@ -83,4 +83,4 @@ async def search_index(request: Request, project_id: str, search_request: Search
 
     return JSONResponse(status_code=status.HTTP_200_OK,
                         content={"signal": ResponseSignals.INDEX_SEARCH_SUCCESS,
-                                 "result": [result.dict() for result in results]})
+                                 "result": results})

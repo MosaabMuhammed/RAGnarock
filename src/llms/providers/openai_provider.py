@@ -51,17 +51,17 @@ class OpenAIProvider(LLMProviderInterface):
         max_tokens = max_tokens or self.max_output_tokens
         temperature = temperature or self.temperature
 
-        chat_history.append(self.construct_prompt(prompt, OpenAIEnums.USER))
+        chat_history.append(self.construct_prompt(prompt, OpenAIEnums.USER.value))
 
-        response = self.client.completions.create(model=self.generation_model_id,
-                                                  messages=chat_history,
-                                                  max_tokens=max_tokens,
-                                                  temperature=temperature)
+        response = self.client.chat.completions.create(model=self.generation_model_id,
+                                                       messages=chat_history,
+                                                       max_tokens=max_tokens,
+                                                       temperature=temperature)
         
         if not response or not response.choices or not response.choices[0].message:
             self.logger.error("Error while generating text with OpenAI")
             return None
-        return response.choices[0].message['content']
+        return response.choices[0].message
 
         
     def embed_text(self, text: str, doc_type: str=None):
@@ -85,5 +85,5 @@ class OpenAIProvider(LLMProviderInterface):
     def construct_prompt(self, prompt: str, role: str):
         return {
             "role": role,
-            "prompt": self.process_text(prompt)
+            "content": self.process_text(prompt)
         }

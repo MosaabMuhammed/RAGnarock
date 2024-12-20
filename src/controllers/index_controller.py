@@ -51,9 +51,9 @@ class IndexController(BaseController):
         if not vector:
             return False
         
-        search_results = self.vectordb_client.search(collection_name=collection_name,
-                                                     vector=vector,
-                                                     top_k=top_k)
+        search_results = self.vectordb_client.search_by_vector(collection_name=collection_name,
+                                                               vector=vector,
+                                                               top_k=top_k)
         
         if not search_results:
             return False

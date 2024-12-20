@@ -4,7 +4,7 @@ class PromptParser:
     def __init__(self, lang: str=None, default_lang: str="en"):
         self.default_lang = default_lang
         self.lang = lang or self.default_lang
-        self.current_path = os.path.direname(os.path.abspath(__file__))
+        self.current_path = os.path.dirname(os.path.abspath(__file__))
 
     def set_lang(self, lang: str):
         if not lang:
@@ -20,9 +20,9 @@ class PromptParser:
         if not group or not key:
             return None
 
-        group_path = os.path.join(self.current_path, "locales", self.lang, f"{group}.json")
+        group_path = os.path.join(self.current_path, "locales", self.lang, f"{group}.py")
         if not os.path.exists(group_path):
-            group_path = os.path.join(self.current_path, "locales", self.default_lang, f"{group}.json")
+            group_path = os.path.join(self.current_path, "locales", self.default_lang, f"{group}.py")
             self.lang = self.default_lang
 
         if not os.path.exists(group_path):
