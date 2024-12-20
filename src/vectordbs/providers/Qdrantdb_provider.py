@@ -5,6 +5,7 @@ from qdrant_client import models, QdrantClient
 
 from .vectordb_interface import VectorDBInterface
 from .vectordb_enums import DistanceMethodEnums
+from models.db_schemas import RetrievedDoc
 
 class QdarntDBProvider(VectorDBInterface):
     def __init__(self, db_path: str, distance_method: DistanceMethodEnums):
@@ -115,6 +116,11 @@ class QdarntDBProvider(VectorDBInterface):
                          collection_name: str,
                          vector: list,
                          top_k: int=1) -> List[Dict]:
-        return self.client.search(collection_name=collection_name,
-                                  query_vector=vector,
-                                  limit=top_k)
+        results = self.client.search(collection_name=collection_name,
+                                     query_vector=vector,
+                                     limit=top_k)
+        
+        if not results:
+            return None
+        
+        return [RetrievedDoc(text=doc.payload["text"], score=doc.score) for doc in results]

@@ -1,9 +1,9 @@
-from .provider_interface import ProviderInterface
+from .llm_provider_interface import LLMProviderInterface
 from .llm_enums import CohereEnums, DocumentTypeEnums
 import cohere
 import logging
 
-class CohereProvider(ProviderInterface):
+class CohereProvider(LLMProviderInterface):
     def __init__(self,
                  api_key: str,
                  max_input_tokens: int=1000,
@@ -17,6 +17,8 @@ class CohereProvider(ProviderInterface):
         self.generation_model_id = None
         self.embedding_model_id  = None
         self.embedding_size      = None
+
+        self.roles = CohereEnums
 
         self.client = cohere.ClientV2(api_key=api_key)
         self.logger = logging.getLogger(__name__)

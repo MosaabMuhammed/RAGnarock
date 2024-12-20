@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from config.settings import get_settings
 from contextlib import asynccontextmanager
 from llms import LLMProviderFactory
+from llms.prompts import PromptParser
 from vectordbs import VectorDBFactory
 
 @asynccontextmanager
@@ -25,6 +26,9 @@ async def lifespan(app: FastAPI):
     
     app.vectordb_client = vectordb_factory.create(settings.VECTORDB_BACKEND)
     app.vectordb_client.connect()
+
+    app.prompt_parser = PromptParser(lang=settings.DEFAULT_LANG,
+                                     default_lang=settings.DEFAULT_LANG)
 
     yield
 

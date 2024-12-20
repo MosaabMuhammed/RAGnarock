@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     VECTORDB_BACKEND: str=None
     VECTORDB_PATH: str=None
     VECTORDB_DISTANCE_METHOD: str=None
+
+    DEFAULT_LANG: str
     class Config:
         env_file = ".env"
 

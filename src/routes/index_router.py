@@ -75,12 +75,12 @@ async def search_index(request: Request, project_id: str, search_request: Search
                                         embedding_client=request.app.embedding_client,
                                         generation_client=request.app.generation_client)
     
-    result = index_controller.search_index(project=project, query=search_request.query, top_k=search_request.top_k)
+    results = index_controller.search_index(project=project, query=search_request.query, top_k=search_request.top_k)
 
-    if not result:
+    if not results:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={"signal": ResponseSignals.INDEX_SEARCH_FAILED})
 
     return JSONResponse(status_code=status.HTTP_200_OK,
                         content={"signal": ResponseSignals.INDEX_SEARCH_SUCCESS,
-                                 "result": result})
+                                 "result": [result.dict() for result in results]})

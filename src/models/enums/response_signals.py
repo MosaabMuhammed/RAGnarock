@@ -18,5 +18,8 @@ class ResponseSignals(str, Enum):
     INDEX_SEARCH_SUCCESS    = "index_search_success"
     INDEX_SEARCH_FAILED     = "index_search_failed"
 
+    ANSWER_GENERATED_SUCCESS = "answer_generated_success"
+    ANSWER_GENERATED_FAILED  = "answer_generated_failed"
+
     def __str__(self) -> str:
         return str.__str__(self)

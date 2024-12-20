@@ -1,9 +1,9 @@
-from .provider_interface import ProviderInterface
+from .llm_provider_interface import LLMProviderInterface
 from openai import OpenAI
 import logging
 from .llm_enums import OpenAIEnums
 
-class OpenAIProvider(ProviderInterface):
+class OpenAIProvider(LLMProviderInterface):
     def __init__(self, 
                  api_key: str,
                  api_url: str=None,
@@ -19,6 +19,8 @@ class OpenAIProvider(ProviderInterface):
         self.generation_model_id = None
         self.embedding_model_id  = None
         self.embedding_size      = None
+
+        self.roles = OpenAIEnums
 
         self.client = OpenAI(api_key=api_key, base_url=api_url)
         self.logger = logging.getLogger(__name__)
