@@ -20,7 +20,7 @@ class AnswerController(BaseController):
 
         document_prompts = "\n\n".join([
             self.prompt_parser.get("QnA", "doc_prompt", {"doc_no": idx+1,
-                                                         "doc_text": doc['text']}) 
+                                                         "doc_text": self.generation_client.process_text(doc['text'])}) 
             for idx, doc in enumerate(retrieved_docs)
         ])
 

@@ -36,7 +36,7 @@ class CohereProvider(LLMProviderInterface):
     def construct_prompt(self, prompt: str, role: str):
         return {
             "role": role,
-            "content": self.process_text(prompt)
+            "content": prompt
         }
 
     def generate_text(self, 

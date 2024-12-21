@@ -8,6 +8,6 @@ class ProjectController(BaseController):
         super().__init__()
 
     def get_project_path(self, project_id):
-        project_dir = self.files_dir / project_id
+        project_dir = Path(self.files_dir) / str(project_id)
         project_dir.mkdir(parents=True, exist_ok=True)
         return project_dir

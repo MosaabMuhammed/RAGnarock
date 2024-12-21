@@ -11,7 +11,7 @@ answer_router = APIRouter(prefix="/api/v1/answer",
                           tags=["answer"])
 
 @answer_router.post("/answer_query/{project_id}")
-async def answer_query(request: Request, project_id: str, search_request: SearchRequest):
+async def answer_query(request: Request, project_id: int, search_request: SearchRequest):
     project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project       = await project_model.get_or_create_one(project_id=project_id)
 

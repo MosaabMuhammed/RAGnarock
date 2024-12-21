@@ -19,7 +19,7 @@ data_router = APIRouter(
 
 @data_router.post("/upload_file/{project_id}")
 async def upload_file(request: Request, 
-                      project_id: str, 
+                      project_id: int, 
                       file: UploadFile, 
                       app_settings: Settings=Depends(get_settings)):
     data_controller = DataController()
@@ -61,7 +61,7 @@ async def upload_file(request: Request,
                                  "asset_id": str(asset_record.id)})
 
 @data_router.post("/process/{project_id}")
-async def process_endpoint(request: Request, project_id: str, process_data: ProcessData):
+async def process_endpoint(request: Request, project_id: int, process_data: ProcessData):
     process_controller = ProcessController(project_id=project_id)
 
     chunk_model   = await ChunkModel.create_instance(db_client=request.app.db_client)
@@ -101,17 +101,13 @@ async def process_endpoint(request: Request, project_id: str, process_data: Proc
                                                                chunk_size=process_data.chunk_size,
                                                                overlap_size=process_data.overlap_size)
 
-        # if not chunks or len(chunks) == 0:
-        #     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
-        #                         content={"signal": ResponseSignals.PROCESS_FAILED})
-
         project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
         project       = await project_model.get_or_create_one(project_id=project_id)
 
         new_chunks = [
             Chunk(
                 text=chunk.page_content,
-                metadata=chunk.metadata,
+                config=chunk.metadata,
                 order=i+1,
                 project_id=project.id,
                 asset_id=asset_id

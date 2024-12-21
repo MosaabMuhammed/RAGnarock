@@ -11,7 +11,7 @@ index_router = APIRouter(prefix="/api/v1/index",
                          tags=["index"])
 
 @index_router.post("/index/{project_id}")
-async def index_project(request: Request, project_id: str, push_request: PushRequest):
+async def index_project(request: Request, project_id: int, push_request: PushRequest):
     project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project       = await project_model.get_or_create_one(project_id=project_id)
     if not project:
@@ -52,7 +52,7 @@ async def index_project(request: Request, project_id: str, push_request: PushReq
                         content={"signal": ResponseSignals.INDEX_INSERTION_SUCCESS})
 
 @index_router.get("/get_index_info/{project_id}")
-async def get_index_info(request: Request, project_id: str):
+async def get_index_info(request: Request, project_id: int):
     project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project       = await project_model.get_or_create_one(project_id=project_id)
 
@@ -67,7 +67,7 @@ async def get_index_info(request: Request, project_id: str):
                                  "collection_info": collection_info})
 
 @index_router.post("/search/{project_id}")
-async def search_index(request: Request, project_id: str, search_request: SearchRequest):
+async def search_index(request: Request, project_id: int, search_request: SearchRequest):
     project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project       = await project_model.get_or_create_one(project_id=project_id)
 
